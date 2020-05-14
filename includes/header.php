@@ -126,5 +126,5 @@
 </head>
 <body>
     <div class="header">
-        <p class="logo">Facebook+</p>   
+        <p class="logo">PHP Social Network</p>   
     </div>

@@ -33,7 +33,7 @@ SELECT users.user_id,users.first_name, users.last_name, users.gender, friends.fr
                             <div class="item clearfix">
                                 <div class="image"><a href="#"><img src="img/users/<?php echo $friends['profile_photo']; ?>" width="30" height="35"/></a></div>
                                 <div class="info">
-                                    <a href="#" class="name"><?php echo $friends['first_name'] . " " . $friends['last_name']; ?></a>                                    
+                                    <a href="user_profile.php?member_id=<?php echo $friends['user_id']; ?>" class="name"><?php echo $friends['first_name'] . " " . $friends['last_name']; ?></a>                                    
                                 </div>
                             </div>
 							<?php } }?>
