@@ -23,7 +23,12 @@
 <?php include("includes/breadLine.php"); ?>      
   
     <div class="workplace">
-            <div class="row-fluid">
+        <?php if(isset($_GET['msg']) && $_GET['msg']) { ?>
+            <div class="alert alert-danger">
+                <p>Already liked this post!</p>
+            </div>
+        <?php } ?>
+        <div class="row-fluid">
             <div class="span9">
                 
                 <div class="head clearfix">
@@ -34,7 +39,7 @@
                 <div class="block stream">
    
    				<?php
-                	$selectPost = "SELECT `post_id`, `member_id`, `post_time`, `post_content`, users.first_name, users.last_name, users.profile_photo FROM `posts` INNER JOIN users ON posts.member_id = users.user_ID WHERE posts.post_id = " . $_GET['post_id'] . " AND posts.member_id = " . $_SESSION['user_ID'] . " LIMIT 1";
+                	$selectPost = "SELECT `post_id`, `member_id`, `post_time`, `post_content`, users.first_name, users.last_name, users.profile_photo FROM `posts` INNER JOIN users ON posts.member_id = users.user_ID WHERE posts.post_id = " . $_GET['post_id'] . " AND posts.member_id = " . $_GET['member_id'] . " LIMIT 1";
 					$res = mysqli_query($conn, $selectPost);
 					while($rows = mysqli_fetch_assoc($res)) {
                 ?>
@@ -63,48 +68,46 @@
 								//$results = mysqli_fetch_assoc($image);								
 							?>
                             <div class="text gallery">
-                            <?php
-                            //if($results['post_id'] == $rows['post_id']) {
-								while($row = mysqli_fetch_assoc($image)) {
-							?>
-                            
-                                <a class="fancybox" href="img/<?php echo $row['file_name']; ?>" rel="group">
-                                	<img class="img-polaroid" src="img/<?php echo $row['file_name']; ?>" width="250" height="250">
-                                </a>
-                            
-                            
+                                <?php
+                                //if($results['post_id'] == $rows['post_id']) {
+                                    while($row = mysqli_fetch_assoc($image)) {
+                                ?>
+                                    <a class="fancybox" href="img/<?php echo $row['file_name']; ?>" rel="group">
+                                        <img class="img-polaroid" src="img/<?php echo $row['file_name']; ?>" width="250" height="250">
+                                    </a>
+                                <?php }  ?>
                             </div>
-                               <?php }  ?>
-                            <p class="actions">
-                            <a href="like_post.php?post_id=<?php echo $_GET['post_id']; ?>&member_id=<?php echo $_SESSION['user_ID']; ?>"><span class="icon-heart"></span> Like </a>
-                            <a href="#"><span class=" icon-share-alt"></span> Share </a>
-                            </p>
+
+                                <p class="actions">
+                                    <a href="like_post.php?post_id=<?php echo $_GET['post_id']; ?>&member_id=<?php echo $_GET['member_id']; ?>"><span class="icon-heart"></span> Like </a>
+                                    <a href="#"><span class=" icon-share-alt"></span> Share </a>
+                                </p>
                             
-                    <p class="actions" style="text-align: left;">
-                         <span class="label label-inverse">
-                         <?php $str = "SELECT * FROM comments WHERE post_id = $_GET[post_id] AND member_id = $_SESSION[user_ID]";
-						 $strQresult = mysqli_query($conn, $str);
-						 $count = mysqli_num_rows($strQresult);
-						 if($count == 0) {
-							 echo "No ";
-						 } else {
-							 echo $count;
-						 }
-                         ?></span> <?php if($count == 1) { echo " Comment"; } else { echo " Comments"; } ?> 
-                         <span class="icon-comment"></span>
-                         <span class="label label-inverse">
-                         <?php $str = "SELECT * FROM like_post WHERE post_id = $_GET[post_id] AND member_id = $_SESSION[user_ID]";
-						 $strQresult = mysqli_query($conn, $str);
-						 $count = mysqli_num_rows($strQresult);
-						 if($count == 0) {
-							 echo "No ";
-						 } else {
-							 echo $count;
-						 }
-                         ?></span> <?php if($count == 1) { echo " Like"; } else { echo " Likes"; } ?> 
-                         <span class=" icon-thumbs-up"></span>
-                    </p>
-                    </div>
+                                <p class="actions" style="text-align: left;">
+                                     <span class="label label-inverse">
+                                     <?php $str = "SELECT * FROM comments WHERE post_id = $_GET[post_id] AND member_id = $_SESSION[user_ID]";
+                                     $strQresult = mysqli_query($conn, $str);
+                                     $count = mysqli_num_rows($strQresult);
+                                     if($count == 0) {
+                                         echo "No ";
+                                     } else {
+                                         echo $count;
+                                     }
+                                     ?></span> <?php if($count == 1) { echo " Comment"; } else { echo " Comments"; } ?>
+                                     <span class="icon-comment"></span>
+                                     <span class="label label-inverse">
+                                     <?php $str = "SELECT * FROM like_post WHERE post_id = $_GET[post_id] AND member_id = $_GET[member_id]";
+                                     $strQresult = mysqli_query($conn, $str);
+                                     $count = mysqli_num_rows($strQresult);
+                                     if($count == 0) {
+                                         echo "No ";
+                                     } else {
+                                         echo $count;
+                                     }
+                                     ?></span> <?php if($count == 1) { echo " Like"; } else { echo " Likes"; } ?>
+                                     <span class=" icon-thumbs-up"></span>
+                                </p>
+                        </div>
                     </div>
                     
                     <div class="block messages">
@@ -191,8 +194,7 @@
             </div>     
                 
             </div>
-           
-                </div>
+
         </div>
         
     </div>

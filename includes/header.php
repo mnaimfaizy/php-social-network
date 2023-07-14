@@ -1,3 +1,14 @@
+<?php
+// 1. write the http protocol
+$full_url = "http://";
+
+// 2. check if your server use HTTPS
+if (isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] === "on") {
+    $full_url = "https://";
+}
+
+$full_url .= $_SERVER["HTTP_HOST"];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>        
@@ -103,6 +114,14 @@
 			font-weight: bold;
 			font-size: 18px;	
 		}
+    .chat-time {
+        background-color: gray;
+        color: white;
+        padding: 2px 5px;
+        border-radius: 11px;
+        font-size: 0.6rem;
+        margin-right: 10px;
+    }
 	</style>
     <script type="text/javascript">
 

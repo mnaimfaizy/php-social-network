@@ -49,7 +49,6 @@ include("includes/header.php"); ?>
 			$msg = "Invalid file";
 		}
 	}
-	
 	// Here it will check the old password and change it to new password
 	if(isset($_POST['passSubmit'])) {
 		
@@ -65,7 +64,7 @@ include("includes/header.php"); ?>
 			$stringQuery = "UPDATE users SET password='" . md5($newPassword) . "' WHERE user_ID=" . $_SESSION['user_ID'];
 				if(mysqli_query($conn, $stringQuery)) {
 					session_destroy();
-					header("Location: login.php");
+                    echo '<script>window.location="'. $full_url .'/login.php"</script>';
 				} else {
 					$errorMsg = "Failed to update, try again! <br />";
 				}

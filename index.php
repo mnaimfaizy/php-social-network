@@ -52,7 +52,7 @@
 		
 		$postToSent = $_POST['postToSend'];
 		$date = time();
-		$postToSent = mysql_escape_string($postToSent);
+		$postToSent = mysqli_real_escape_string($conn, $postToSent);
 		$strInsertQuery = "INSERT INTO `posts`(`post_id`, `member_id`, `post_time`, `post_content`) VALUES (null,'" . $_SESSION['user_ID'] . "',$date,'$postToSent')";
 		if(mysqli_query($conn,$strInsertQuery)) {
 			header("Location: index.php");	
@@ -112,7 +112,14 @@
                 <div class="block stream">
    
    				<?php
-                	$selectPost = "SELECT `post_id`, `member_id`, `post_time`, `post_content`, users.first_name, users.last_name, users.profile_photo FROM `posts` INNER JOIN users ON posts.member_id = users.user_ID WHERE posts.member_id = " . $_SESSION['user_ID'] . " ORDER BY post_id DESC";
+                    $selectPost = "select p.post_id, p.post_time, p.member_id, p.post_content, u.user_ID, u.first_name, u.last_name, u.profile_photo 
+                                    from posts p
+                                    inner join users u on u.user_ID=p.member_id
+                                    inner join friends f on f.toMemberID=p.member_id or f.requestedMemberID=p.member_id
+                                    where f.requestedMemberID=". $_SESSION['user_ID'] ." 
+                                    or f.toMemberID=". $_SESSION['user_ID'] ." 
+                                    and f.Status='Accepted'
+                                    order by p.post_id desc";
 					$res = mysqli_query($conn, $selectPost);
 					while($rows = mysqli_fetch_assoc($res)) {
 						$_SESSION['post_ID'] = $rows['post_id'];
@@ -163,7 +170,7 @@
                             <?php }  ?>
                             </div>
                         <div class="footer">
-                        <a href="posts.php?post_id=<?php echo $rows['post_id']; ?>&member_id=<?php echo $_SESSION['user_ID'] ?>" class="btn btn-info"> Read more...</a>
+                        <a href="posts.php?post_id=<?php echo $rows['post_id']; ?>&member_id=<?php echo $rows['user_ID'] ?>" class="btn btn-info"> Read more...</a>
                         </div>
                             
                     </div>

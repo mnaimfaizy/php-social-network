@@ -1,0 +1,37 @@
+version: '3.9'
+services:
+  php_social_network:
+    container_name: php_social_network
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - php_social_network_db
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - 9000:80
+    networks:
+      - php_social_network_nat
+
+  php_social_network_db:
+    container_name: php_social_network_db
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "Kabul@123"
+      MYSQL_DATABASE: "php_social_network"
+      MYSQL_USER: "admin"
+      MYSQL_PASSWORD: "Kabul@123"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "33066:3306"
+    networks:
+      - php_social_network_nat
+
+volumes:
+  mysql_data:
+
+networks:
+  php_social_network_nat:

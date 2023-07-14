@@ -21,30 +21,17 @@
                         <div class="scroll" id="scrolls" style="height: 280px;">
                         	
                          <?php
-                            	$strQuery = "SELECT friends_ID, `requestedMemberID`, `toMemberID` FROM `friends` WHERE (requestedMemberID = $_SESSION[user_ID] OR toMemberID = $_SESSION[user_ID]) AND Status = 'Accepted'";
+                                $strQuery = "select u.first_name, u.last_name, u.profile_photo, u.user_ID, f.requestedMemberID, f.toMemberID
+                                                from friends f
+                                                    inner join users u ON u.user_ID = f.toMemberID
+                                                where f.requestedMemberID=" . $_SESSION['user_ID'] ."
+                                                and f.Status='Accepted';";
 								$strResult = mysqli_query($conn, $strQuery);
 								while($friends = mysqli_fetch_assoc($strResult)) {
-									
-									$from_id = $friends['requestedMemberID'];
-									$to_id = $friends['toMemberID'];
-									
-									$userID = $from_id;
-									
-									if($from_id == $_SESSION['user_ID']){
-										$userID = $to_id;
-									}
-									
-									$firstname = "";
-									$lastname = "";
-									$profilephoto = "";
-									$member_id = "";
-									
-									$m_info = mysqli_query($conn, "SELECT * from users where user_ID = $userID");
-									$m_info = mysqli_fetch_assoc($m_info);
-									$firstname = $m_info['first_name'];
-									$lastname = $m_info['last_name'];
-									$member_id = $m_info['user_ID'];
-									$profilephoto = $m_info['profile_photo'];
+                                    $firstname = $friends['first_name'];
+									$lastname = $friends['last_name'];
+									$profilephoto = $friends['profile_photo'];
+									$member_id = $friends['user_ID'];
 									
                             ?>
                         <div class="item clearfix">
@@ -88,7 +75,8 @@
 					
 					?></span></p>
                     
-                    <div id="chat-wrap"><div id="chat-area">
+                    <div id="chat-wrap">
+                        <div id="chat-area">
                     	<?PHP
 						if( isset($_GET['user_id']) ){
 						
@@ -114,43 +102,51 @@
 							$messageDate = '';
 					?>
                     	<p class="<?PHP echo ( $from_id == $_SESSION['user_ID'] ) ? "from_msg" : "to_msg"; ?>">
-									<?php /*$db_Date = @$msg_Date;
-										  $current_Date = time();
-										  $timeOfMessage = ($current_Date - $db_Date);
-										  if($timeOfMessage == 0) {
-											  $messageDate = " just Now";
-										  } else if($timeOfMessage <= 60) {
-											$messageDate .= $timeOfMessage . " Seconds Ago";  
-										  } else if($timeOfMessage > 60 && $timeOfMessage < 3600) {
-												$timeOfMessageInMinutes = $timeOfMessage / 60;
-												$timeOfMessageInMinutes = floor($timeOfMessageInMinutes);
-												if($timeOfMessageInMinutes == 1) {  
-													$messageDate .= $timeOfMessageInMinutes . " Minute Ago";
-												} else {
-													$messageDate .= $timeOfMessageInMinutes . " Minutes Ago";
-												}
-										  } else if($timeOfMessage >= 3600 && $timeOfMessage < 86400 ) {
-											  	$timeOfMessageInHours = $timeOfMessage / (60 * 60);
-												$timeOfMessageInHours = floor($timeOfMessageInHours);
-												if($timeOfMessageInHours == 1) {  
-													$messageDate .= $timeOfMessageInHours . " Hour Ago";
-												} else {
-													$messageDate .= $timeOfMessageInHours . " Hours Ago";
-												}
-										  } else if($timeOfMessage >= 86400) {
-											  $timeOfMessageInDays = $timeOfMessage / ((60 * 60) * 24);
-											  $timeOfMessageInDays = floor($timeOfMessageInDays);
-												if($timeOfMessageInDays == 1) {  
-													$messageDate .= " Yesterday";
-												} else {
-													$messageDate .= date("M-d",$db_Date);
-												}
-										  }
-										  echo $messageDate;*/
-									 ?>
-                         <?php echo $msg_TEXT; ?></p>
+                            <i class="chat-time">
+                                <?php
+                                $db_Date = @$msg_Date;
+                                $current_Date = time();
+                                $timeOfMessage = ($current_Date - $db_Date);
+                                if($timeOfMessage == 0) {
+                                    $messageDate = " just Now";
+                                } else if($timeOfMessage <= 60) {
+                                    $messageDate .= $timeOfMessage . " Seconds Ago";
+                                } else if($timeOfMessage > 60 && $timeOfMessage < 3600) {
+                                    $timeOfMessageInMinutes = $timeOfMessage / 60;
+                                    $timeOfMessageInMinutes = floor($timeOfMessageInMinutes);
+                                    if($timeOfMessageInMinutes == 1) {
+                                        $messageDate .= $timeOfMessageInMinutes . " Minute Ago";
+                                    } else {
+                                        $messageDate .= $timeOfMessageInMinutes . " Minutes Ago";
+                                    }
+                                } else if($timeOfMessage >= 3600 && $timeOfMessage < 86400 ) {
+                                    $timeOfMessageInHours = $timeOfMessage / (60 * 60);
+                                    $timeOfMessageInHours = floor($timeOfMessageInHours);
+                                    if($timeOfMessageInHours == 1) {
+                                        $messageDate .= $timeOfMessageInHours . " Hour Ago";
+                                    } else {
+                                        $messageDate .= $timeOfMessageInHours . " Hours Ago";
+                                    }
+                                } else if($timeOfMessage >= 86400) {
+                                    $timeOfMessageInDays = $timeOfMessage / ((60 * 60) * 24);
+                                    $timeOfMessageInDays = floor($timeOfMessageInDays);
+                                    if($timeOfMessageInDays == 1) {
+                                        $messageDate .= " Yesterday";
+                                    } else {
+                                        $messageDate .= date("M-d",$db_Date);
+                                    }
+                                }
+                                echo $messageDate;
+                                ?>
+                            </i>
+
+                            <i><?php echo $msg_TEXT; ?></i>
+
+                        </p>
+
                     <?php }} ?>
-                    </div></div>
+                    </div>
+                </div>
                     
                     <form method="post" id="msgForm" name="msgForm" >
                         <button type="submit" class="btn" name="btnSendMessage" id="btnSendMessage">Send message</button>

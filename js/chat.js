@@ -61,3 +61,9 @@ $(function () {
     });
 
 });
+
+window.onload = function () {
+    setTimeout(() => {
+        document.getElementById('chat-area').scrollTop = document.getElementById('chat-area').scrollHeight;
+    }, 1500)
+}

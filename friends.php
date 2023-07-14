@@ -36,7 +36,7 @@
                         <div class="rSpace">                                                                           
                             <span style="font-family:Baskerville, 'Palatino Linotype', Palatino, 'Century Schoolbook L', 'Times New Roman', serif; font-size: 14px; font-weight:bold; margin-bottom: 10px;"><?php echo $friends['first_name'] . " " . $friends['last_name']; ?></span>
                             <span style="margin-bottom: 10px; font-weight: bold;"><?php echo $friends['gender']; ?></span>
-                            <span><a href="user_profile.php?member_id=<?php echo $friends['user_id']; ?>" class="btn">View Profile</a></span>                                                        
+                            <span><a href="user_profile.php?member_id=<?php echo $friends['user_ID']; ?>" class="btn">View Profile</a></span>
                         </div>
                     </div>                                 
                 </div>

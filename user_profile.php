@@ -1,37 +1,34 @@
-<?php 
+<?php
 include("includes/CheckStatus.php");
 include("includes/connection.php");
-
-
 if($_SERVER['REQUEST_METHOD'] == "POST"){
-	
-	
+
 	if($_POST['btnFriend'] == "Send Friend Request"){
 		$requestDate = time();
 		echo $query = "INSERT INTO friends (requestedMemberID, toMemberID,RequestedDate, Status)
 				  VALUES ($_SESSION[user_ID], $_GET[member_id], $requestDate, 'Pending')";
 		if(mysqli_query($conn, $query)){
-			header("location: user_profile.php?member_id=$_GET[member_id]");
+            echo '<script>window.location ="'. $full_url .'/user_profile.php?member_id='. $_GET["member_id"]. '"'.'</script>';
 		}
 	}else if ($_POST['btnFriend'] == "Accept Friend Request"){
 		//Accept Friend Request
 		
 		$query = "UPDATE friends SET Status = 'Accepted' WHERE requestedMemberID=$_GET[member_id] AND toMemberID=$_SESSION[user_ID]";
 		if(mysqli_query($conn, $query)){
-			header("location: user_profile.php?member_id=$_GET[member_id]");
+            echo '<script>window.location ="'. $full_url .'/user_profile.php?member_id='. $_GET["member_id"]. '"'.'</script>';
 		}
 		
 	}else if($_POST['btnFriend'] == "Reject Friend Request"){
 		// Reject
 		$query = "UPDATE friends SET Status = 'Rejected' WHERE requestedMemberID=$_GET[member_id] AND toMemberID=$_SESSION[user_ID]";
 		if(mysqli_query($conn, $query)){
-			header("location: user_profile.php?member_id=$_GET[member_id]");
+            echo '<script>window.location ="'. $full_url .'/user_profile.php?member_id='. $_GET["member_id"]. '"'.'</script>';
 		}
 	}
 	
 }
-
-include("includes/header.php"); ?>
+include("includes/header.php");
+?>
 <?php include("includes/Navigation.php"); ?>
     <div class="content">
 
@@ -209,17 +206,20 @@ include("includes/breadLine.php");
                         <h1>User images</h1>                       
                     </div>
                     <div class="block gallery clearfix">
-                        <?php 
+                        <?php
+                            $strUsersImages = '';
 							if(isset($_GET['member_id'])) {
-								@$strUserImages = "SELECT * FROM files WHERE member_id = " . $_GET['member_id'];
+								@$strUsersImages    = "SELECT * FROM files WHERE member_id = " . $_GET['member_id'];
 							} else {
 								@$strUsersImages = "SELECT * FROM files WHERE member_id = " . $_SESSION['user_ID'];
 							}
-							if(@$strResult = mysqli_query($conn, $strUsersImages)) {
+                            @$strResult = mysqli_query($conn, @$strUsersImages);
+							if($strResult) {
 							while($strImage = mysqli_fetch_assoc($strResult)) {
 						?>
                         <a class="fancybox" rel="group" href="img/<?php echo $strImage["file_name"]; ?>"><img src="img/<?php echo $strImage["file_name"]; ?>" class="img-polaroid" width="100" height="75"/></a>
-                        <?php } } ?>
+                        <?php }
+                            } ?>
                     </div>
                 </div>
                 
@@ -232,8 +232,10 @@ include("includes/breadLine.php");
                     <div class="block-fluid users">                                                
 						<div class="scroll" style="height: 500px;">
                             <?php 
-								$strFriends = "SELECT users.first_name, users.last_name, users.profile_photo, friends.requestedMemberID FROM `friends` 
-LEFT JOIN users ON users.user_ID = friends.requestedMemberID WHERE requestedMemberID = " . $_SESSION['user_ID'] . " OR toMemberID = " . $_SESSION['user_ID'] . " AND Status = 'Accepted'";
+							    $strFriends ="select u.first_name, u.last_name, u.profile_photo, f.requestedMemberID, f.toMemberID from friends f
+                                                inner join users u ON u.user_ID = f.toMemberID
+                                                where f.requestedMemberID=" . $_SESSION['user_ID'] . "
+                                                and f.Status='Accepted'";
 							$strFriendsResult = mysqli_query($conn, $strFriends);
 							while($strRows = mysqli_fetch_assoc($strFriendsResult)) {
 							?>

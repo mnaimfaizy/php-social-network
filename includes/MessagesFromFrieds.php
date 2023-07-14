@@ -18,46 +18,37 @@
 					<?php } ?>
                     </div>
                     <div class="block messages scrollBox">
-                    	<div class="scroll" style="height: 270px; overflow:scroll;">
-                        
-                        <?php
-                            	$strQuery = "SELECT friends_ID, `requestedMemberID`, `toMemberID` FROM `friends` WHERE (requestedMemberID = $_SESSION[user_ID] OR toMemberID = $_SESSION[user_ID]) AND Status = 'Accepted'";
-								$strResult = mysqli_query($conn, $strQuery);
-								while($friends = mysqli_fetch_assoc($strResult)) {
-									
-									$from_id = $friends['requestedMemberID'];
-									$to_id = $friends['toMemberID'];
-									
+                    	<div class="scroll" style="height: 270px;">
+                <?php
+                    $strQuery = "SELECT friends_ID, `requestedMemberID`, `toMemberID` FROM `friends` WHERE (requestedMemberID = $_SESSION[user_ID] OR toMemberID = $_SESSION[user_ID]) AND Status = 'Accepted'";
+                    $strResult = mysqli_query($conn, $strQuery);
+                    while($friends = mysqli_fetch_assoc($strResult)) {
 
-									$firstname = "";
-									$lastname = "";
-									$profilephoto = "";
-									
-									echo $strMsgQuery = "SELECT * FROM message WHERE 
-										(from_user_id = $from_id OR to_user_id = $to_id) AND
-										(to_user_id = $to_id OR from_user_id = $from_id) AND Status = 'Unread'";
+                        $from_id = $friends['toMemberID'];
+                        $to_id = $friends['requestedMemberID'];
+
+
+                        $firstname = "";
+                        $lastname = "";
+                        $profilephoto = "";
+
+                        $strMsgQuery = "select * from message where to_user_id=$to_id AND from_user_id=$from_id AND Status='Unread'";
 						$msgs = mysqli_query($conn, $strMsgQuery);
 						while($m_result = mysqli_fetch_assoc($msgs)){
-							
-							$from_id = $m_result['from_user_id'];
-							$to_id = $m_result['to_user_id'];
-							if($from_id == $_SESSION['user_ID']) {
-								$userID = $to_id;
-							}
-							
-							echo $userInfo = "SELECT user_ID, first_name, last_name, profile_photo from users WHERE user_ID=$userID";
+							$userId = $m_result['from_user_id'];
+							$userInfo = "SELECT user_ID, first_name, last_name, profile_photo from users WHERE user_ID=$userId";
 							$uers = mysqli_query($conn, $userInfo);
 							$userInfo = mysqli_fetch_array($uers);
 							$firstname = $userInfo['first_name'];
 							$lastname = $userInfo['last_name'];
 							$member_id = $userInfo['user_ID'];
-							$profilephoto = $userInfo['profile_photo'];	
-								
+							$profilephoto = $userInfo['profile_photo'];
+
 								?>
                         
                         <div class="item clearfix">
                             <div class="image">
-                                <a href="#">
+                                <a href="messages.php?user_id=<?php echo $member_id; ?>">
                                 	<img class="img-polaroid" src="img/users/<?php echo $profilephoto; ?>" width="30" height="35" />
                                 </a>
                             </div>
