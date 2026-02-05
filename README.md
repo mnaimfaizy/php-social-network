@@ -84,7 +84,30 @@ A feature-rich social networking platform built with PHP and MySQL, originally d
 
 ## 📸 Screenshots
 
-> **Note**: Add screenshots of your application here to showcase the interface and features.
+### News Feed
+
+The main feed page displaying posts from friends with like and comment functionality.
+![Feeds Page](screenshots/feeds-page.png)
+
+### User Profile
+
+Personal profile page showing user information, posts, and photo albums.
+![My Profile Page](screenshots/my-profile-page.png)
+
+### Friends Management
+
+View and manage your friends list with options to connect with new people.
+![Friends Page](screenshots/friends-page.png)
+
+### Messaging System
+
+Real-time messaging interface for chatting with friends.
+![Messaging](screenshots/messaging.png)
+
+### Post Details
+
+Detailed view of individual posts with comments and interactions.
+![Post Detail](screenshots/post-detail.png)
 
 ## 🛠 Technology Stack
 
