@@ -1,10 +1,10 @@
 <?php
 
-define("DB_HOST", "192.168.0.104");
+define("DB_HOST", "php_social_network_db");
 define("DB_USERNAME", "root");
 define("DB_PASSWORD", "Kabul@123");
 define("DB_DATABASE_NAME", "php_social_network");
-define("DB_PORT", 33066);
+define("DB_PORT", 3306);
 
 
 // Create connection
